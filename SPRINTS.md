@@ -27,8 +27,32 @@ worth more than six ticks nobody can stand behind.
 
 Done in Week 6. Your own record is in your `week6` repository.
 
-This starter's `index.html` is your facilitator's build of S1 and S2, checked against
-every criterion. Everyone starts Week 7 from the same file.
+This starter's `index.html` is your facilitator's build of S1, checked against every
+criterion. Everyone starts Week 7 from the same file.
+
+---
+
+## Sprint 2 again — story S2 (practice, in the Week 7 lab)
+
+You built S2 at home in Week 6. Today you build it again, in the room, with the same
+prompt. S9 builds on S2's list, so everyone needs a working S2 first.
+
+### The prompt I gave the agent
+
+### The quick check
+
+Use a private window, so the list starts empty. Submit three enquiries: Tan Mei Ling
+(deadline 7 days ago), Lim Ah Kow (14 days from today) and Priya Nair (91 days from
+today).
+
+| What I checked | What I saw |
+|---|---|
+| The list said "No enquiries yet." before I submitted | |
+| The order: Tan Mei Ling, Lim Ah Kow, Priya Nair | |
+| Tan Mei Ling marked "Deadline passed"; Lim Ah Kow marked "Time-critical" | |
+| Priya Nair not marked | |
+
+No tag. S2 goes into `v0.3`, with S9.
 
 ---
 

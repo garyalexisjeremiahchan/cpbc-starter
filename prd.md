@@ -4,8 +4,8 @@
 Built from the Week 3 model answer, and written to fix what the Week 3 markup found in
 `CPBC-PRD-v0`. Version 1.3.
 
-S1 and S2 were built in Week 6. You build story S9 from this document in the Week 7
-lab, and story S4 is the Week 7 homework. The backlog in §5 is the order we build in,
+S1 and S2 were built in Week 6. In the Week 7 lab you build S2 again, as practice, then
+story S9. Story S4 is the Week 7 homework. The backlog in §5 is the order we build in,
 one story at a time.
 
 ---
@@ -85,7 +85,7 @@ Built in this order. Stories above the MVP line are the MVP.
 | # | Role | Story | Sprint |
 |---|---|---|---|
 | S1 | Enquirer, front desk | As an enquirer, or the front desk acting for one, I want to submit an enquiry with only the details the Centre needs, and get a reference, so that I can ask for help without an email address and know it arrived | Week 6 lab — done |
-| S2 | Centre Manager | As the Centre Manager, I want to see every new enquiry in one list, with any time-critical enquiry at the top, so that urgent matters reach a volunteer first | Week 6 homework — done |
+| S2 | Centre Manager | As the Centre Manager, I want to see every new enquiry in one list, with any time-critical enquiry at the top, so that urgent matters reach a volunteer first | Week 6 homework — done. Built again in the Week 7 lab, as practice |
 | **S9** | Centre Manager | As the Centre Manager, I want every enquiry, from any computer, kept by the Centre in one list, so that no enquiry stays on the computer it was typed on | **Week 7 lab** |
 | **S4** | Centre Manager | As the Centre Manager, I want an enquiry with a limitation deadline inside thirty days marked time-critical by the Centre's server, so that it reaches a volunteer while something can still be done | **Week 7 homework** |
 | S3 | Centre Manager | As the Centre Manager, I want each enquiry given a suggested area of law, which I confirm or change, so that no enquiry is routed on a guess nobody checked | Later |
@@ -275,4 +275,4 @@ even though some of it only applies once there is a server.
 | 1.0 | 26 Sep 2026 | First version, for the Week 4 lab |
 | 1.1 | 2 Oct 2026 | S1 and S2 move to Week 5, because the Week 4 build did not run. Nothing else changed |
 | 1.2 | 13 Oct 2026 | S1 and S2 move to Week 6. S2's acceptance criteria written, including what "time-critical" means. The server arrives in Week 7 |
-| 1.3 | 22 Oct 2026 | S1 and S2 done. New story S9 — the Centre keeps every enquiry on its server — for the Week 7 lab, with its criteria. S4's criteria written, for the Week 7 homework. §7 describes the server's files and says records stay out of the repository |
+| 1.3 | 22 Oct 2026 | S1 and S2 done. New story S9 — the Centre keeps every enquiry on its server — for the Week 7 lab, with its criteria. S4's criteria written, for the Week 7 homework. S2 is built again in the Week 7 lab, as practice. §7 describes the server's files and says records stay out of the repository |

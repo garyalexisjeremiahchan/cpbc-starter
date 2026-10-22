@@ -22,18 +22,10 @@
   button { font: inherit; margin-top: 16px; padding: 12px 24px; background: #22306b; color: #ffffff;
            border: 0; border-radius: 4px; cursor: pointer; }
   .done { padding: 16px; border: 2px solid #1d6b3a; border-radius: 4px; }
-  .switch { margin-top: 24px; }
-  .switch a { color: #22306b; font-weight: bold; }
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #5a6076; vertical-align: top; }
-  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: bold; color: #ffffff; }
-  .tag.passed { background: #9b1c1c; }
-  .tag.critical { background: #8a4b00; }
 </style>
 </head>
 <body>
 <main>
- <section id="form-view">
   <h1>Ask the Centre for help</h1>
 
   <form id="enquiry" novalidate>
@@ -83,15 +75,7 @@
   </div>
 
   <p id="count" class="hint"></p>
-  <p class="switch"><a href="#list" id="to-list">Centre Manager's list</a></p>
- </section>
 
- <section id="list-view" hidden>
-  <h1>Centre Manager's list</h1>
-  <p class="hint">Every enquiry submitted in this browser. Deadlines passed first, then time-critical (deadline today or within 30 days), then everything else, newest first.</p>
-  <div id="list"></div>
-  <p class="switch"><a href="#form" id="to-form">Back to the enquiry form</a></p>
- </section>
 </main>
 
 <script>
@@ -135,43 +119,6 @@
   });
   show();
 
-  // S2 - the Centre Manager's list
-  function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-  function parseDay(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
-  function status(e) {
-    if (!e.deadline) return 'other';
-    var days = Math.round((parseDay(e.deadline) - today()) / 86400000);
-    if (days < 0) return 'passed';
-    if (days <= 30) return 'critical';
-    return 'other';
-  }
-  function text(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function renderList() {
-    var all = load(), box = document.getElementById('list');
-    if (!all.length) { box.innerHTML = '<p>No enquiries yet.</p>'; return; }
-    var rank = { passed: 0, critical: 1, other: 2 };
-    all.sort(function (a, b) {
-      var sa = status(a), sb = status(b);
-      if (sa !== sb) return rank[sa] - rank[sb];
-      if (sa === 'other') return b.submitted < a.submitted ? -1 : 1;
-      return a.deadline < b.deadline ? -1 : 1;
-    });
-    var rows = all.map(function (e) {
-      var st = status(e), mark = st === 'passed' ? '<span class="tag passed">Deadline passed</span>'
-        : st === 'critical' ? '<span class="tag critical">Time-critical</span>' : '';
-      return '<tr><td>' + mark + '</td><td>' + text(e.ref) + '</td><td>' + text(e.name) + '</td><td>' +
-        text(new Date(e.submitted).toLocaleString()) + '</td><td>' + text(e.deadline || '') + '</td></tr>';
-    }).join('');
-    box.innerHTML = '<table><thead><tr><th></th><th>Reference</th><th>Name</th><th>Submitted</th><th>Deadline or court date</th></tr></thead><tbody>' + rows + '</tbody></table>';
-  }
-  function route() {
-    var onList = location.hash === '#list';
-    document.getElementById('form-view').hidden = onList;
-    document.getElementById('list-view').hidden = !onList;
-    if (onList) renderList();
-  }
-  window.addEventListener('hashchange', route);
-  route();
 </script>
 </body>
 </html>

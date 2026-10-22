@@ -4,7 +4,7 @@ Name:
 
 ---
 
-## Part D — your access log
+## Part E — your access log
 
 Copy two lines from the terminal where your server is running.
 
