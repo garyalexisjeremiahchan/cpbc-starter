@@ -2,10 +2,11 @@
 
 **The shared starting point for everyone's new system.**
 Built from the Week 3 model answer, and written to fix what the Week 3 markup found in
-`CPBC-PRD-v0`. Version 1.2.
+`CPBC-PRD-v0`. Version 1.3.
 
-You build story S1 from this document in the Week 6 lab. Story S2 is the Week 6
-homework. The backlog in §5 is the order we build in, one story at a time.
+S1 and S2 were built in Week 6. You build story S9 from this document in the Week 7
+lab, and story S4 is the Week 7 homework. The backlog in §5 is the order we build in,
+one story at a time.
 
 ---
 
@@ -83,13 +84,18 @@ Built in this order. Stories above the MVP line are the MVP.
 
 | # | Role | Story | Sprint |
 |---|---|---|---|
-| **S1** | Enquirer, front desk | As an enquirer, or the front desk acting for one, I want to submit an enquiry with only the details the Centre needs, and get a reference, so that I can ask for help without an email address and know it arrived | **Week 6 lab** |
-| **S2** | Centre Manager | As the Centre Manager, I want to see every new enquiry in one list, with any time-critical enquiry at the top, so that urgent matters reach a volunteer first | **Week 6 homework** |
+| S1 | Enquirer, front desk | As an enquirer, or the front desk acting for one, I want to submit an enquiry with only the details the Centre needs, and get a reference, so that I can ask for help without an email address and know it arrived | Week 6 lab — done |
+| S2 | Centre Manager | As the Centre Manager, I want to see every new enquiry in one list, with any time-critical enquiry at the top, so that urgent matters reach a volunteer first | Week 6 homework — done |
+| **S9** | Centre Manager | As the Centre Manager, I want every enquiry, from any computer, kept by the Centre in one list, so that no enquiry stays on the computer it was typed on | **Week 7 lab** |
+| **S4** | Centre Manager | As the Centre Manager, I want an enquiry with a limitation deadline inside thirty days marked time-critical by the Centre's server, so that it reaches a volunteer while something can still be done | **Week 7 homework** |
 | S3 | Centre Manager | As the Centre Manager, I want each enquiry given a suggested area of law, which I confirm or change, so that no enquiry is routed on a guess nobody checked | Later |
-| S4 | Centre Manager | As the Centre Manager, I want an enquiry with a limitation deadline inside thirty days marked time-critical, so that it reaches a volunteer while something can still be done | Later |
 | S5 | Centre Manager | As the Centre Manager, I want to assign an enquiry to a volunteer who works in its area of law, so that nobody is given a matter outside their practice | Later |
 | S6 | Volunteer lawyer | As a volunteer lawyer, I want to be told when I have been assigned a matter, so that nothing waits for me without my knowing | Later |
 | S7 | Volunteer lawyer | As a volunteer lawyer, I want to see the Centre's guidance for the matter's area of law, so that I start from what the Centre already knows | Later |
+
+S9 is new in version 1.3. It was added when the Week 6 build showed that S1 and S2
+keep every enquiry in one browser, where nobody at the Centre can see it. A story
+added later takes the next free number, so S9 sits above S3 in the build order.
 
 --- MVP line ---
 
@@ -148,6 +154,48 @@ decide it, from Week 7.
    yet."
 7. S1 still works: S1's criteria 1 and 5 still pass after S2 is added.
 
+### S9 — acceptance criteria
+
+Each criterion can be checked by someone who was not in the room. §7 says how the
+system is built from Week 7.
+
+1. An enquiry submitted in one browser appears in the Centre Manager's list when the
+   list is opened in a private window, or in a different browser.
+2. The server gives each enquiry its reference, in the form `CPBC-` followed by four
+   digits. No two enquiries ever get the same reference, whichever browser they came
+   from.
+3. The server checks that a phone number or an email address was given. If neither
+   was, the server refuses the enquiry, saves nothing, and the page shows the server's
+   message.
+4. For testing, the page skips its own checks when its address ends in `?nocheck`.
+   The server's check still applies. This is how criterion 3 is tried.
+5. Every enquiry the server accepts is saved in `enquiries.json`, which can be opened
+   and read.
+6. The server listens only to this computer, at `http://127.0.0.1:8000`.
+7. S1 and S2 still work. S1's criteria 1 to 6 and S2's criteria 1 to 6 still pass. The
+   count in S1 criterion 7, and the list in S2, now show every enquiry the server
+   holds, not only those from this browser. The form still never shows anyone's
+   details.
+
+### S4 — acceptance criteria
+
+Each criterion can be checked by someone who was not in the room.
+
+S2 marks time-critical enquiries in the browser. S4 moves that decision to the server,
+where the Centre controls it. "Time-critical" still means a deadline or court date
+that is today or within the next 30 days.
+
+1. The server decides each enquiry's mark: "Deadline passed", "Time-critical", or no
+   mark. The page shows the mark the server decided. It does not work out the mark
+   itself.
+2. The server decides the mark each time the list is shown, not once when the enquiry
+   is saved. An enquiry becomes time-critical on the day its deadline comes within 30
+   days.
+3. "Today" means today in Singapore.
+4. An enquiry with no deadline or court date is never marked.
+5. The list is in the same order as S2's criteria 3 to 5 describe.
+6. S1, S2 and S9 still work: their criteria still pass.
+
 ## §6 Data
 
 What the system holds about a person, and which story needs each field.
@@ -172,10 +220,23 @@ named.
 
 - **Built by an AI agent, one story at a time.** Each story is checked against its
   criteria before the next one starts.
-- **Until Week 7 — a single HTML file.** No server, no database, no installation.
-  Enquiries are kept in the browser's own storage, on one computer only. This is a
-  prototype, not the Centre's record. From Week 7 the system has a server; from Week 8,
-  a database.
+- **Weeks 6 and 7 — from one file to a small server.** In Week 6 the system was a
+  single HTML file, with enquiries kept in one browser. From Week 7 it is a small
+  server built with Flask, in these files:
+
+  | File | What it is |
+  |---|---|
+  | `app.py` | The server. It answers each request, checks what arrives, and saves it |
+  | `templates/index.html` | The page the server sends to the browser — the S1 form and the S2 list |
+  | `enquiries.json` | The enquiries the server has accepted. It is a prototype of the Centre's record, not the record itself |
+  | `requirements.txt` | The outside code the server needs: Flask. See §9 item 5 |
+
+  The server starts with the command `python app.py` (`python3 app.py` on macOS). It
+  listens only to this computer, at `http://127.0.0.1:8000`, until §9's sign-in is
+  built in Week 12. From Week 8, enquiries move from `enquiries.json` into a database.
+- **Records stay out of the repository.** `enquiries.json` is never committed. The
+  starter's `.gitignore` file keeps it out. The repository holds the system, not the
+  people who used it.
 - **Synthetic data only.** No real person's details are ever entered.
 - **Retention.** How long enquiries are kept, and when they are deleted, is to be
   decided by the Centre with legal advice before any real enquiry is stored. Until
@@ -189,7 +250,7 @@ A story is done when every one of its acceptance criteria has been checked and
 recorded as met, and the record is committed with a tag. A criterion that cannot be
 checked yet is recorded as not met, with the reason, and stays on the backlog.
 
-The MVP is done when S1 to S7 are done.
+The MVP is done when S1 to S7, and S9, are done.
 
 ## §9 Security
 
@@ -214,3 +275,4 @@ even though some of it only applies once there is a server.
 | 1.0 | 26 Sep 2026 | First version, for the Week 4 lab |
 | 1.1 | 2 Oct 2026 | S1 and S2 move to Week 5, because the Week 4 build did not run. Nothing else changed |
 | 1.2 | 13 Oct 2026 | S1 and S2 move to Week 6. S2's acceptance criteria written, including what "time-critical" means. The server arrives in Week 7 |
+| 1.3 | 22 Oct 2026 | S1 and S2 done. New story S9 — the Centre keeps every enquiry on its server — for the Week 7 lab, with its criteria. S4's criteria written, for the Week 7 homework. §7 describes the server's files and says records stay out of the repository |

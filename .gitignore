@@ -1,0 +1,5 @@
+# The Centre's records stay out of the repository (prd.md section 7).
+enquiries.json
+
+# Files Python makes for itself.
+__pycache__/

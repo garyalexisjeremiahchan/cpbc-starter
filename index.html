@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask the Community Pro Bono Centre for help</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 18px; line-height: 1.5;
+         color: #1a1a2e; background: #ffffff; margin: 0; padding: 24px; }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 28px; color: #22306b; }
+  label { display: block; font-weight: bold; margin-top: 16px; }
+  input, select, textarea { font: inherit; width: 100%; box-sizing: border-box;
+         padding: 8px; border: 2px solid #5a6076; border-radius: 4px; color: #1a1a2e; background: #fff; }
+  textarea { min-height: 120px; }
+  fieldset { border: 2px solid #5a6076; border-radius: 4px; margin-top: 16px; }
+  fieldset label { display: inline; font-weight: normal; margin-right: 16px; }
+  fieldset input { width: auto; }
+  .hint { font-weight: normal; color: #3d4152; }
+  .notice { margin-top: 24px; padding: 12px; border: 2px solid #22306b; border-radius: 4px; }
+  .error { color: #9b1c1c; font-weight: bold; }
+  button { font: inherit; margin-top: 16px; padding: 12px 24px; background: #22306b; color: #ffffff;
+           border: 0; border-radius: 4px; cursor: pointer; }
+  .done { padding: 16px; border: 2px solid #1d6b3a; border-radius: 4px; }
+  .switch { margin-top: 24px; }
+  .switch a { color: #22306b; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #5a6076; vertical-align: top; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: bold; color: #ffffff; }
+  .tag.passed { background: #9b1c1c; }
+  .tag.critical { background: #8a4b00; }
+</style>
+</head>
+<body>
+<main>
+ <section id="form-view">
+  <h1>Ask the Centre for help</h1>
+
+  <form id="enquiry" novalidate>
+    <label for="name">Full name</label>
+    <input id="name" name="name" autocomplete="name">
+
+    <label for="phone">Phone number <span class="hint">(or give an email address below)</span></label>
+    <input id="phone" name="phone" type="tel" autocomplete="tel">
+
+    <label for="email">Email address <span class="hint">(or give a phone number above)</span></label>
+    <input id="email" name="email" type="email" autocomplete="email">
+
+    <label for="language">Preferred language</label>
+    <select id="language" name="language">
+      <option>English</option><option>Chinese</option><option>Malay</option><option>Tamil</option><option>Other</option>
+    </select>
+
+    <label for="problem">What is the problem?</label>
+    <textarea id="problem" name="problem"></textarea>
+
+    <fieldset>
+      <legend>Do you know of a deadline or court date?</legend>
+      <label><input type="radio" name="hasDeadline" value="no" checked> No</label>
+      <label><input type="radio" name="hasDeadline" value="yes"> Yes</label>
+    </fieldset>
+    <label for="deadline">If yes, the date</label>
+    <input id="deadline" name="deadline" type="date">
+
+    <fieldset>
+      <legend>Who is filling in this form?</legend>
+      <label><input type="radio" name="submittedBy" value="enquirer" checked> The person asking for help</label>
+      <label><input type="radio" name="submittedBy" value="front desk"> The front desk, for them</label>
+    </fieldset>
+
+    <p class="notice">We use these details only to reply to you and to pass your enquiry
+    to a volunteer lawyer. This form does not give legal advice.</p>
+
+    <p id="error" class="error" role="alert"></p>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="thanks" class="done" hidden>
+    <h2>We have your enquiry</h2>
+    <p>Your reference is <strong id="ref"></strong>. Please keep it.</p>
+    <p>We will contact you within 3 working days. If we have not, call us on 6000 0000.</p>
+    <button type="button" id="another">Submit another enquiry</button>
+  </div>
+
+  <p id="count" class="hint"></p>
+  <p class="switch"><a href="#list" id="to-list">Centre Manager's list</a></p>
+ </section>
+
+ <section id="list-view" hidden>
+  <h1>Centre Manager's list</h1>
+  <p class="hint">Every enquiry submitted in this browser. Deadlines passed first, then time-critical (deadline today or within 30 days), then everything else, newest first.</p>
+  <div id="list"></div>
+  <p class="switch"><a href="#form" id="to-form">Back to the enquiry form</a></p>
+ </section>
+</main>
+
+<script>
+  var KEY = 'cpbc-enquiries';
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
+  function save(all) { try { localStorage.setItem(KEY, JSON.stringify(all)); } catch (e) {} }
+  function newRef(all) {
+    var used = all.map(function (e) { return e.ref; }), ref;
+    do { ref = 'CPBC-' + String(Math.floor(Math.random() * 10000)).padStart(4, '0'); }
+    while (used.indexOf(ref) !== -1);
+    return ref;
+  }
+  function show() {
+    var n = load().length;
+    document.getElementById('count').textContent =
+      n + (n === 1 ? ' enquiry is' : ' enquiries are') + ' kept in this browser.';
+  }
+  document.getElementById('enquiry').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var f = ev.target, err = document.getElementById('error');
+    var phone = f.phone.value.trim(), email = f.email.value.trim();
+    if (!f.name.value.trim()) { err.textContent = 'Please give your name.'; return; }
+    if (!phone && !email) { err.textContent = 'Please give a phone number or an email address, so we can reply.'; return; }
+    if (!f.problem.value.trim()) { err.textContent = 'Please tell us what the problem is.'; return; }
+    err.textContent = '';
+    var all = load();
+    var e = {
+      ref: newRef(all), name: f.name.value.trim(), phone: phone, email: email,
+      language: f.language.value, problem: f.problem.value.trim(),
+      deadline: f.hasDeadline.value === 'yes' ? f.deadline.value : '',
+      submittedBy: f.submittedBy.value, submitted: new Date().toISOString()
+    };
+    all.push(e); save(all);
+    document.getElementById('ref').textContent = e.ref;
+    f.hidden = true; document.getElementById('thanks').hidden = false;
+    show();
+  });
+  document.getElementById('another').addEventListener('click', function () {
+    var f = document.getElementById('enquiry'); f.reset(); f.hidden = false;
+    document.getElementById('thanks').hidden = true;
+  });
+  show();
+
+  // S2 - the Centre Manager's list
+  function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function parseDay(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function status(e) {
+    if (!e.deadline) return 'other';
+    var days = Math.round((parseDay(e.deadline) - today()) / 86400000);
+    if (days < 0) return 'passed';
+    if (days <= 30) return 'critical';
+    return 'other';
+  }
+  function text(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function renderList() {
+    var all = load(), box = document.getElementById('list');
+    if (!all.length) { box.innerHTML = '<p>No enquiries yet.</p>'; return; }
+    var rank = { passed: 0, critical: 1, other: 2 };
+    all.sort(function (a, b) {
+      var sa = status(a), sb = status(b);
+      if (sa !== sb) return rank[sa] - rank[sb];
+      if (sa === 'other') return b.submitted < a.submitted ? -1 : 1;
+      return a.deadline < b.deadline ? -1 : 1;
+    });
+    var rows = all.map(function (e) {
+      var st = status(e), mark = st === 'passed' ? '<span class="tag passed">Deadline passed</span>'
+        : st === 'critical' ? '<span class="tag critical">Time-critical</span>' : '';
+      return '<tr><td>' + mark + '</td><td>' + text(e.ref) + '</td><td>' + text(e.name) + '</td><td>' +
+        text(new Date(e.submitted).toLocaleString()) + '</td><td>' + text(e.deadline || '') + '</td></tr>';
+    }).join('');
+    box.innerHTML = '<table><thead><tr><th></th><th>Reference</th><th>Name</th><th>Submitted</th><th>Deadline or court date</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  function route() {
+    var onList = location.hash === '#list';
+    document.getElementById('form-view').hidden = onList;
+    document.getElementById('list-view').hidden = !onList;
+    if (onList) renderList();
+  }
+  window.addEventListener('hashchange', route);
+  route();
+</script>
+</body>
+</html>

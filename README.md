@@ -7,21 +7,24 @@ Centre, built one story at a time in the Applied AI for Law course.
 
 | File | What it is |
 |---|---|
-| `prd.md` | The PRD for the new system, version 1.2. §5 is the backlog: the stories, in the order we build them |
+| `prd.md` | The PRD for the new system, version 1.3. §5 is the backlog: the stories, in the order we build them |
+| `index.html` | Stories S1 and S2, built and checked by your facilitator. The same stories you built in Week 6 |
 | `SPRINTS.md` | Your record of each sprint: what you asked for, what you checked, what you found |
-| `week6-notes.md` | Your notes from the Week 6 lab and legal close |
+| `week7-notes.md` | Your notes from the Week 7 lab and legal close |
+| `requirements.txt` | The outside code the server needs: Flask |
+| `.gitignore` | Keeps `enquiries.json` — the Centre's records — out of the repository |
 
-There is no system here yet. You build story S1 in the Week 6 lab, into a file called
-`index.html`. Story S2 is the Week 6 homework.
+In the Week 7 lab you build story S9: the system gets a server, so the Centre keeps
+every enquiry. Story S4 is the Week 7 homework.
 
 ## How to use it
 
-1. On GitHub, create an empty public repository called `week6`.
-2. Clone this starter into a folder called `week6`:
-   `git clone https://github.com/garyalexisjeremiahchan/cpbc-starter.git week6`
+1. On GitHub, create an empty public repository called `week7`.
+2. Clone this starter into a folder called `week7`:
+   `git clone https://github.com/garyalexisjeremiahchan/cpbc-starter.git week7`
 3. Before your first push, point your copy at your own repository:
-   `git remote set-url origin https://github.com/YOUR-USERNAME/week6.git`
+   `git remote set-url origin https://github.com/YOUR-USERNAME/week7.git`
 
-The Week 6 lab page, `amp.ad/lab06`, has every step.
+The Week 7 lab page, `amp.ad/lab07`, has every step.
 
 All data in this system is synthetic. Enter only the test details from the lab page.
